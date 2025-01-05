@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rummy Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f3f3f3;
+            margin: 0;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            width: 100px;
+            height: 140px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 2px solid #ddd;
+        }
+
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card .suit {
+            font-size: 18px;
+        }
+
+        .spades::before { content: "♠"; }
+        .hearts::before { content: "♥"; color: red; }
+        .diamonds::before { content: "♦"; color: red; }
+        .clubs::before { content: "♣"; }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+</head>
+<body>
+<h1>Rummy Cards</h1>
+
+<!-- Button to generate new hand of cards -->
+<button class="btn" id="generateHandBtn">Generate New Hand</button>
+
+<!-- Button to sort the hand of cards -->
+<button class="btn" id="sortHandBtn">Sort Cards</button>
+
+<!-- Container to hold the cards -->
+<div class="card-container" id="cardContainer"></div>
+
+<script>
+    $('#sortHandBtn').hide();
+    // Define all possible cards
+    const cards = [
+        { value: "1", suit: "spades" }, { value: "1", suit: "clubs" }, { value: "1", suit: "hearts", red: true }, { value: "1", suit: "diamonds", red: true },
+        { value: "2", suit: "spades" }, { value: "2", suit: "clubs" }, { value: "2", suit: "hearts", red: true }, { value: "2", suit: "diamonds", red: true },
+        { value: "3", suit: "spades" }, { value: "3", suit: "clubs" }, { value: "3", suit: "hearts", red: true }, { value: "3", suit: "diamonds", red: true },
+        { value: "4", suit: "spades" }, { value: "4", suit: "clubs" }, { value: "4", suit: "hearts", red: true }, { value: "4", suit: "diamonds", red: true },
+        { value: "5", suit: "spades" }, { value: "5", suit: "clubs" }, { value: "5", suit: "hearts", red: true }, { value: "5", suit: "diamonds", red: true },
+        { value: "6", suit: "spades" }, { value: "6", suit: "clubs" }, { value: "6", suit: "hearts", red: true }, { value: "6", suit: "diamonds", red: true },
+        { value: "7", suit: "spades" }, { value: "7", suit: "clubs" }, { value: "7", suit: "hearts", red: true }, { value: "7", suit: "diamonds", red: true },
+        { value: "8", suit: "spades" }, { value: "8", suit: "clubs" }, { value: "8", suit: "hearts", red: true }, { value: "8", suit: "diamonds", red: true },
+        { value: "9", suit: "spades" }, { value: "9", suit: "clubs" }, { value: "9", suit: "hearts", red: true }, { value: "9", suit: "diamonds", red: true },
+        { value: "10", suit: "spades" }, { value: "10", suit: "clubs" }, { value: "10", suit: "hearts", red: true }, { value: "10", suit: "diamonds", red: true },
+        { value: "Dame", suit: "spades" }, { value: "Dame", suit: "clubs" }, { value: "Dame", suit: "hearts", red: true }, { value: "Dame", suit: "diamonds", red: true },
+        { value: "Valet", suit: "spades" }, { value: "Valet", suit: "clubs" }, { value: "Valet", suit: "hearts", red: true }, { value: "Valet", suit: "diamonds", red: true },
+        { value: "Roi", suit: "spades" }, { value: "Roi", suit: "clubs" }, { value: "Roi", suit: "hearts", red: true }, { value: "Roi", suit: "diamonds", red: true }
+    ];
+
+    // Function to generate a random hand of 10 cards
+    function generateHand(callback) {
+        $.ajax({
+            url: '{{ path('random_hand') }}',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                callback(data.cards);
+            },
+            error: function() {
+                console.error('Erreur de récupération des cartes');
+            }
+        });
+
+    }
+
+    // Function to render the hand of cards to the DOM
+    function renderHand() {
+        generateHand(function(hand) {
+            const cardContainer = document.getElementById('cardContainer');
+            cardContainer.innerHTML = ''; // Clear previous cards
+
+            hand.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card');
+                cardDiv.innerHTML = `
+                <div class="value">${card.value}</div>
+                <div class="suit ${card.color}"></div>
+            `;
+                cardContainer.appendChild(cardDiv);
+                $('#sortHandBtn').show();
+            });
+        });
+    }
+
+    // Function to sort the hand of cards
+    function sortHand(hand) {
+        // Define suit order
+        const suitOrder = ['diamonds', 'hearts', 'spades', 'clubs'];
+        // Define value order
+        const valueOrder = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi'];
+
+        return hand.sort((a, b) => {
+            // Sort by suit order
+            const suitDiff = suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit);
+            if (suitDiff !== 0) return suitDiff;
+
+            // If suits are the same, sort by value order
+            return valueOrder.indexOf(a.value) - valueOrder.indexOf(b.value);
+        });
+    }
+
+    // Function to render sorted hand
+    function renderSortedHand() {
+        const cardContainer = document.getElementById('cardContainer');
+        const hand = Array.from(cardContainer.children); // Get the current hand from the container
+
+        const sortedHand = sortHand(hand.map(cardDiv => {
+            const value = cardDiv.querySelector('.value').innerText;
+            const suit = cardDiv.querySelector('.suit').classList[1];
+            return { value, suit };
+        }));
+
+        cardContainer.innerHTML = ''; // Clear previous sorted cards
+
+        sortedHand.forEach(card => {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            cardDiv.innerHTML = `
+                <div class="value ${card.red ? 'red' : ''}">${card.value}</div>
+                <div class="suit ${card.suit}"></div>
+            `;
+            cardContainer.appendChild(cardDiv);
+        });
+    }
+
+    // Attach click event to the "Generate New Hand" button
+    document.getElementById('generateHandBtn').addEventListener('click', renderHand);
+
+    // Attach click event to the "Sort Cards" button
+    document.getElementById('sortHandBtn').addEventListener('click', renderSortedHand);
+
+    // Initial render of the hand when the page loads
+    //window.onload = renderHand;
+</script>
+</body>
+</html>
