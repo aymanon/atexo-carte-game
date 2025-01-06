@@ -37,9 +37,8 @@ class CardGameService
             $hand->addCard($card);
         }
 
-        // Sauvegarder la main triée dans la base de données
-        $this->entityManager->persist($hand); // Persiste la main et toutes les cartes associées
-        $this->entityManager->flush(); // Sauvegarde dans la base de données
+        $this->entityManager->persist($hand);
+        $this->entityManager->flush();
 
         return $hand;
     }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rummy Cards</title>
+    <title>Jeu de cartes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,13 +80,13 @@
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
 </head>
 <body>
-<h1>Rummy Cards</h1>
+<h1>Jeu de cartes</h1>
 
 <!-- Button to generate new hand of cards -->
-<button class="btn" id="generateHandBtn">Generate New Hand</button>
+<button class="btn" id="generateHandBtn">Générer une main</button>
 
 <!-- Button to sort the hand of cards -->
-<button class="btn" id="sortHandBtn">Sort Cards</button>
+<button class="btn" id="sortHandBtn">Trier les cartes de la main</button>
 
 <!-- Container to hold the cards -->
 <div class="card-container" id="cardContainer"></div>
@@ -148,9 +148,9 @@
     // Function to sort the hand of cards
     function sortHand(hand) {
         // Define suit order
-        const suitOrder = ['diamonds', 'hearts', 'spades', 'clubs'];
+        const suitOrder = '{{ suitOrder|json_encode()|raw }}';
         // Define value order
-        const valueOrder = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Valet', 'Dame', 'Roi'];
+        const valueOrder = '{{ valueOrder|json_encode()|raw }}';
 
         return hand.sort((a, b) => {
             // Sort by suit order

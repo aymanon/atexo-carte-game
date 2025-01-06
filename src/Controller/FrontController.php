@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Card;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,6 +15,12 @@ class FrontController extends AbstractController
     #[Route('/', name: 'home')]
     public function index()
     {
-        return $this->render('front/index.html.twig', []);
+        $suitOrder = Card::COLORS;
+        $valueOrder = Card::VALUES;
+
+        return $this->render('front/index.html.twig', [
+            'suitOrder' => $suitOrder,
+            'valueOrder' => $valueOrder
+        ]);
     }
 }
