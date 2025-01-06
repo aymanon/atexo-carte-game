@@ -3,6 +3,7 @@
 
 namespace App\Command;
 
+use App\Entity\Hand;
 use App\Service\CardGameService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +24,7 @@ class GenerateDealHandCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Génère une main de 10 cartes et l\'a trier.');
+        $this->setDescription('Génère une main de ' . Hand::NBR_OF_CARDS_BY_HAND . ' cartes et l\'a trier.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

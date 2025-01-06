@@ -28,7 +28,7 @@ class CardGameService
         }
 
         shuffle($cards);
-        $cardsOfHand = array_slice($cards, 0, 10);
+        $cardsOfHand = array_slice($cards, 0, Hand::NBR_OF_CARDS_BY_HAND);
 
         $hand = new Hand();
 

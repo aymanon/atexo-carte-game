@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: HandRepository::class)]
 class Hand
 {
+    const NBR_OF_CARDS_BY_HAND = 10;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
